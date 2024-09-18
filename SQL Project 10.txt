@@ -5,12 +5,14 @@ select * from netflix;
 select * from genres;
 
 # 1. What are the average IMDb scores for each genre of Netflix Originals?
+
 select g.genre, avg(n.imdbscore) as avg_imdbscore
 from genres as g
 join netflix as n on g.genreid = n.genreid
 group by g.genre;
 
 # 2. Which genres have an average IMDb score higher than 7.5?
+
 select g.genre, avg(n.imdbscore) as avg_imdbscore
 from genres as g
 join netflix as n on g.genreid = n.genreid
@@ -18,22 +20,26 @@ group by g.genre
 having avg_imdbscore > 7.5;
 
 # 3.  List Netflix Original titles in descending order of their IMDb scores.
+
 select title, genreid, imdbscore  
 from netflix
 order by imdbscore desc;
 
 # 4. Retrieve the top 10 longest Netflix Originals by runtime.
+
 select title, genreid, runtime from netflix
 order by runtime desc
 limit 10;
 
 # 5. Retrieve the titles of Netflix Originals along with their respective genres.
+
 select n.title, n.genreid, g.genre
 from netflix n
 inner join genres g on n.genreid = g.genreid
 order by n.genreid;
 
 # 6. Rank Netflix Originals based on their IMDb scores within each genre.
+
 select n.title, n.genreid, g.genre, n.imdbscore,
 rank() over (partition by g.genre order by n.imdbscore desc)
 as rnk
@@ -42,12 +48,14 @@ join genres as g on n.genreid = g.genreid
 order by n.genreid, g.genreid;
 
 # 7. Which Netflix Originals have IMDb scores higher than the average IMDb score of all titles?
+
 select title, genreid, imdbscore
 from netflix
 where imdbscore > (select avg(imdbscore) as avg_imdbscore from netflix)
 order by genreid;
 
 # 8. How many Netflix Originals are there in each genre?
+
 select g.genre, count(n.title) as count_title
 from genres as g
 join netflix as n on g.genreid = n.genreid
@@ -55,6 +63,7 @@ group by g.genre
 order by count_title;
 
 # 9. Which genres have more than 5 Netflix Originals with an IMDb score higher than 8?
+
 select g.genre, count(n.title) as count_title
 from genres as g
 join netflix as n on g.genreid = n.genreid
@@ -64,6 +73,7 @@ having count_title > 5
 order by count_title;
 
 # 10. What are the top 3 genres with the highest average IMDb scores, and how many Netflix Originals do they have?
+
 select g.genre, avg(n.imdbscore) as avg_imdbscore, count(n.title) as count_title
 from genres as g
 inner join netflix as n on g.genreid = n.genreid
